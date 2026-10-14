@@ -1,0 +1,167 @@
+{
+  "config": {
+    "data_dir": "data",
+    "output_dir": "outputs",
+    "num_graphs": 10,
+    "num_nodes": 200,
+    "m_values": [
+      3
+    ],
+    "base_seed": 0,
+    "normalize_betweenness": true,
+    "positive_fraction": 0.1,
+    "node_feature_set": [
+      "degree",
+      "clustering",
+      "closeness",
+      "core_number"
+    ],
+    "hidden_dim": 32,
+    "edge_embedding_dim": 64,
+    "num_gnn_layers": 3,
+    "num_mlp_layers": 3,
+    "gnn_dropout": 0.2,
+    "mlp_dropout": 0.2,
+    "normalize_embeddings": false,
+    "edge_combine": "symmetric",
+    "split": [
+      7,
+      1,
+      2
+    ],
+    "epochs": 225,
+    "patience": 50,
+    "learning_rate": 0.003,
+    "edge_sample_size": 5000,
+    "sampling_power": 4.0,
+    "triplets_per_edge": 10,
+    "margin": 1.0,
+    "seed": 42,
+    "k_values": [
+      1,
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100
+    ],
+    "ranking_mode": "classify_then_rank"
+  },
+  "graphs": [
+    {
+      "graph_id": 0,
+      "n": 200,
+      "m": 3,
+      "seed": 0,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009220851733414547,
+      "best_reduction": 4.542916603218111e-05,
+      "positives": 2047
+    },
+    {
+      "graph_id": 1,
+      "n": 200,
+      "m": 3,
+      "seed": 1,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009409420841581646,
+      "best_reduction": 3.781533932287701e-05,
+      "positives": 2017
+    },
+    {
+      "graph_id": 2,
+      "n": 200,
+      "m": 3,
+      "seed": 2,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009558144256636718,
+      "best_reduction": 5.30429927414852e-05,
+      "positives": 2071
+    },
+    {
+      "graph_id": 3,
+      "n": 200,
+      "m": 3,
+      "seed": 3,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009510430942591746,
+      "best_reduction": 3.9845693112024774e-05,
+      "positives": 1994
+    },
+    {
+      "graph_id": 4,
+      "n": 200,
+      "m": 3,
+      "seed": 4,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009597989949748744,
+      "best_reduction": 3.883051621745089e-05,
+      "positives": 2048
+    },
+    {
+      "graph_id": 5,
+      "n": 200,
+      "m": 3,
+      "seed": 5,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009720318765544897,
+      "best_reduction": 4.4667783361250695e-05,
+      "positives": 2018
+    },
+    {
+      "graph_id": 6,
+      "n": 200,
+      "m": 3,
+      "seed": 6,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009642150144662708,
+      "best_reduction": 3.832292777016395e-05,
+      "positives": 1982
+    },
+    {
+      "graph_id": 7,
+      "n": 200,
+      "m": 3,
+      "seed": 7,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009466270747677781,
+      "best_reduction": 4.822090249225927e-05,
+      "positives": 2001
+    },
+    {
+      "graph_id": 8,
+      "n": 200,
+      "m": 3,
+      "seed": 8,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009514491650170043,
+      "best_reduction": 3.603877975737272e-05,
+      "positives": 2029
+    },
+    {
+      "graph_id": 9,
+      "n": 200,
+      "m": 3,
+      "seed": 9,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009184812953657175,
+      "best_reduction": 5.0505050505050505e-05,
+      "positives": 1969
+    }
+  ]
+}
