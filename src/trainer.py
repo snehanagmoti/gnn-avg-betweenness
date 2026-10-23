@@ -8,6 +8,7 @@ import time
 
 import numpy as np
 import torch
+import torch.nn.functional as F
 
 from src.losses import classification_loss, triplet_margin_ranking_loss
 from src.metrics import average_precision_at_k
@@ -18,12 +19,15 @@ from src.sampling import sample_edges, sample_triplets
 def to_tensors(g, device):
     """Turn one loaded graph (dict from data_io) into the tensors the model needs."""
     n = g["G"].number_of_nodes()
+    reds = g["reductions"]
+    std_r = reds.std()
+    norm_reds = (reds - reds.mean()) / (std_r if std_r > 0 else 1.0)
     return {
         "x": torch.as_tensor(g["features"], device=device),
         "adj": mean_adjacency(g["edges"], n).to(device),
         "missing": torch.as_tensor(g["missing_edges"], device=device),
         "labels": torch.as_tensor(g["labels"], device=device),
-        "targets": torch.as_tensor(g["reductions"], dtype=torch.float32, device=device),
+        "targets": torch.as_tensor(norm_reds, dtype=torch.float32, device=device),
         "reductions": g["reductions"],
         "labels_np": g["labels"],
     }
@@ -85,7 +89,8 @@ def train(cfg, train_graphs, val_graphs, device="cpu", verbose=True):
             trip_t = torch.as_tensor(trip, device=device)
             loss_r = (triplet_margin_ranking_loss(scores, t["targets"][idx_t], trip_t, cfg.margin)
                       if len(trip) else torch.zeros((), device=device))
-            loss = loss_c + loss_r                      # paper: unweighted sum
+            loss_reg = F.mse_loss(scores, t["targets"][idx_t])
+            loss = loss_c + loss_r + loss_reg
 
             opt.zero_grad()
             loss.backward()
