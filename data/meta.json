@@ -2,19 +2,37 @@
   "config": {
     "data_dir": "data",
     "output_dir": "outputs",
-    "num_graphs": 10,
+    "graph_type": "ba",
+    "num_graphs": 20,
     "num_nodes": 200,
     "m_values": [
       3
     ],
+    "er_p_values": [
+      0.04
+    ],
+    "ktree_k": 2,
     "base_seed": 0,
     "normalize_betweenness": true,
-    "positive_fraction": 0.1,
+    "label_bands": [
+      0.1,
+      0.02
+    ],
     "node_feature_set": [
       "degree",
       "clustering",
       "closeness",
       "core_number"
+    ],
+    "edge_combine": "symmetric",
+    "edge_feature_set": [
+      "dist",
+      "common_neighbors",
+      "jaccard",
+      "adamic_adar",
+      "closeness_gap",
+      "closeness_minmax",
+      "degree_minmax"
     ],
     "hidden_dim": 32,
     "edge_embedding_dim": 64,
@@ -23,12 +41,29 @@
     "gnn_dropout": 0.2,
     "mlp_dropout": 0.2,
     "normalize_embeddings": false,
-    "edge_combine": "symmetric",
     "split": [
-      7,
-      1,
-      2
+      14,
+      2,
+      4
     ],
+    "train_mode": "two_stage",
+    "stage2_freeze": "none",
+    "stage2_lr_factor": 0.3,
+    "rank_loss": "triplet",
+    "rank_on": "positives",
+    "sampling": "top_biased",
+    "strat_bands": [
+      0.02,
+      0.1,
+      0.5
+    ],
+    "strat_ratios": [
+      0.3,
+      0.3,
+      0.2,
+      0.2
+    ],
+    "batch_size": 500,
     "epochs": 225,
     "patience": 50,
     "learning_rate": 0.003,
@@ -37,6 +72,7 @@
     "triplets_per_edge": 10,
     "margin": 1.0,
     "seed": 42,
+    "select_metric": "map10+map50",
     "k_values": [
       1,
       10,
@@ -50,14 +86,16 @@
       90,
       100
     ],
-    "ranking_mode": "classify_then_rank"
+    "ranking_mode": "classify_then_rank",
+    "exact_rerank_k": 200
   },
   "graphs": [
     {
       "graph_id": 0,
+      "type": "ba",
       "n": 200,
-      "m": 3,
       "seed": 0,
+      "m": 3,
       "edges": 591,
       "missing_edges": 19309,
       "avg_betweenness": 0.009220851733414547,
@@ -66,9 +104,10 @@
     },
     {
       "graph_id": 1,
+      "type": "ba",
       "n": 200,
-      "m": 3,
       "seed": 1,
+      "m": 3,
       "edges": 591,
       "missing_edges": 19309,
       "avg_betweenness": 0.009409420841581646,
@@ -77,9 +116,10 @@
     },
     {
       "graph_id": 2,
+      "type": "ba",
       "n": 200,
-      "m": 3,
       "seed": 2,
+      "m": 3,
       "edges": 591,
       "missing_edges": 19309,
       "avg_betweenness": 0.009558144256636718,
@@ -88,9 +128,10 @@
     },
     {
       "graph_id": 3,
+      "type": "ba",
       "n": 200,
-      "m": 3,
       "seed": 3,
+      "m": 3,
       "edges": 591,
       "missing_edges": 19309,
       "avg_betweenness": 0.009510430942591746,
@@ -99,9 +140,10 @@
     },
     {
       "graph_id": 4,
+      "type": "ba",
       "n": 200,
-      "m": 3,
       "seed": 4,
+      "m": 3,
       "edges": 591,
       "missing_edges": 19309,
       "avg_betweenness": 0.009597989949748744,
@@ -110,9 +152,10 @@
     },
     {
       "graph_id": 5,
+      "type": "ba",
       "n": 200,
-      "m": 3,
       "seed": 5,
+      "m": 3,
       "edges": 591,
       "missing_edges": 19309,
       "avg_betweenness": 0.009720318765544897,
@@ -121,9 +164,10 @@
     },
     {
       "graph_id": 6,
+      "type": "ba",
       "n": 200,
-      "m": 3,
       "seed": 6,
+      "m": 3,
       "edges": 591,
       "missing_edges": 19309,
       "avg_betweenness": 0.009642150144662708,
@@ -132,9 +176,10 @@
     },
     {
       "graph_id": 7,
+      "type": "ba",
       "n": 200,
-      "m": 3,
       "seed": 7,
+      "m": 3,
       "edges": 591,
       "missing_edges": 19309,
       "avg_betweenness": 0.009466270747677781,
@@ -143,9 +188,10 @@
     },
     {
       "graph_id": 8,
+      "type": "ba",
       "n": 200,
-      "m": 3,
       "seed": 8,
+      "m": 3,
       "edges": 591,
       "missing_edges": 19309,
       "avg_betweenness": 0.009514491650170043,
@@ -154,14 +200,135 @@
     },
     {
       "graph_id": 9,
+      "type": "ba",
       "n": 200,
-      "m": 3,
       "seed": 9,
+      "m": 3,
       "edges": 591,
       "missing_edges": 19309,
       "avg_betweenness": 0.009184812953657175,
       "best_reduction": 5.0505050505050505e-05,
       "positives": 1969
+    },
+    {
+      "graph_id": 10,
+      "type": "ba",
+      "n": 200,
+      "seed": 10,
+      "m": 3,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009099791888736613,
+      "best_reduction": 4.847469671590274e-05,
+      "positives": 1957
+    },
+    {
+      "graph_id": 11,
+      "type": "ba",
+      "n": 200,
+      "seed": 11,
+      "m": 3,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009422618141211106,
+      "best_reduction": 4.238363534845947e-05,
+      "positives": 2065
+    },
+    {
+      "graph_id": 12,
+      "type": "ba",
+      "n": 200,
+      "seed": 12,
+      "m": 3,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.00939876148418862,
+      "best_reduction": 4.009948733566824e-05,
+      "positives": 2008
+    },
+    {
+      "graph_id": 13,
+      "type": "ba",
+      "n": 200,
+      "seed": 13,
+      "m": 3,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.00964671844068829,
+      "best_reduction": 3.832292777016395e-05,
+      "positives": 2031
+    },
+    {
+      "graph_id": 14,
+      "type": "ba",
+      "n": 200,
+      "seed": 14,
+      "m": 3,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009226689000558346,
+      "best_reduction": 4.72057255976854e-05,
+      "positives": 2052
+    },
+    {
+      "graph_id": 15,
+      "type": "ba",
+      "n": 200,
+      "seed": 15,
+      "m": 3,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009646210852241002,
+      "best_reduction": 4.8982285163189685e-05,
+      "positives": 1987
+    },
+    {
+      "graph_id": 16,
+      "type": "ba",
+      "n": 200,
+      "seed": 16,
+      "m": 3,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009206893051114157,
+      "best_reduction": 3.654636820465966e-05,
+      "positives": 2055
+    },
+    {
+      "graph_id": 17,
+      "type": "ba",
+      "n": 200,
+      "seed": 17,
+      "m": 3,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009524389624892137,
+      "best_reduction": 5.0505050505050505e-05,
+      "positives": 2054
+    },
+    {
+      "graph_id": 18,
+      "type": "ba",
+      "n": 200,
+      "seed": 18,
+      "m": 3,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.009511192325262678,
+      "best_reduction": 4.669813715039846e-05,
+      "positives": 1934
+    },
+    {
+      "graph_id": 19,
+      "type": "ba",
+      "n": 200,
+      "seed": 19,
+      "m": 3,
+      "edges": 591,
+      "missing_edges": 19309,
+      "avg_betweenness": 0.00941627328562002,
+      "best_reduction": 5.431196385970256e-05,
+      "positives": 2020
     }
   ]
 }

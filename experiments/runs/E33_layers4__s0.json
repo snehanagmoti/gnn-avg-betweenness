@@ -1,0 +1,112 @@
+{
+ "name": "E33_layers4",
+ "step": "7_recheck_tuning",
+ "seed": 0,
+ "overrides": {
+  "select_metric": "map10+map50",
+  "label_bands": [
+   0.1,
+   0.02
+  ],
+  "train_mode": "two_stage",
+  "stage2_freeze": "none",
+  "stage2_lr_factor": 0.3,
+  "edge_feature_set": [
+   "dist",
+   "common_neighbors",
+   "jaccard",
+   "adamic_adar",
+   "closeness_gap",
+   "closeness_minmax",
+   "degree_minmax"
+  ],
+  "num_gnn_layers": 4
+ },
+ "test": {
+  "map1": 0.25,
+  "map10": 0.5243551587301587,
+  "map50": 0.6245566924729495,
+  "map100": 0.704720784509631,
+  "p10": 0.6,
+  "top50_overlap": 0.675,
+  "opt_ratio": 0.9549323615061627,
+  "best10_ratio": 1.0,
+  "top1_in_top50": 1.0,
+  "within_2.5pct": 0.025,
+  "within_10pct": 0.060000000000000005,
+  "in_top2.5pct": 1.0,
+  "spearman50": 0.49716961792291564
+ },
+ "test_per_graph": [
+  {
+   "map1": 0.0,
+   "map10": 0.46416666666666656,
+   "map50": 0.5448540767822636,
+   "map100": 0.673530117413211,
+   "p10": 0.6,
+   "top50_overlap": 0.6,
+   "opt_ratio": 0.9791666666666667,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.04,
+   "within_10pct": 0.12,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.4029422711019288
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.7042063492063492,
+   "map50": 0.7091637539996236,
+   "map100": 0.706253992981663,
+   "p10": 0.8,
+   "top50_overlap": 0.74,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.6007466179155103
+  },
+  {
+   "map1": 0.0,
+   "map10": 0.38,
+   "map50": 0.5023937978485207,
+   "map100": 0.6321845387960289,
+   "p10": 0.4,
+   "top50_overlap": 0.6,
+   "opt_ratio": 0.9293478260869564,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.4436541493664133
+  },
+  {
+   "map1": 0.0,
+   "map10": 0.549047619047619,
+   "map50": 0.7418151412613904,
+   "map100": 0.8069144888476216,
+   "p10": 0.6,
+   "top50_overlap": 0.76,
+   "opt_ratio": 0.9112149532710279,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.5413354333078102
+  }
+ ],
+ "classifier": {
+  "cls_acc": 0.9445336371640167,
+  "cls_bal_acc": 0.6859698887507844,
+  "cls_f1_good": 0.7643310422497267
+ },
+ "best_epoch": 87,
+ "best_val_map10": 0.5910390207272955,
+ "stage1_epoch": 69,
+ "train_seconds": 185.55431056022644,
+ "epochs_run": 256
+}

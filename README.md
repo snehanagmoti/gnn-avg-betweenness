@@ -9,7 +9,7 @@ The approach follows *Aashish et al., "Deep Learning based Link Prediction for M
 
 ```mermaid
 flowchart LR
-    A["Step 1: Dataset<br/>BA graphs, exact ground truth,<br/>labels, node features"] --> B["Steps 2-3: Model & Training<br/>GraphSAGE encoder,<br/>classifier + scorer heads"]
+    A["Step 1: Dataset<br/>graphs, exact ground truth,<br/>labels, node features"] --> B["Steps 2-3: Model & Training<br/>GraphSAGE encoder,<br/>classifier + scorer heads"]
     B --> C["Step 4: Evaluation<br/>rank all candidates,<br/>mAP@k vs. baselines"]
 ```
 
@@ -23,31 +23,47 @@ flowchart LR
 
 ```bash
 pip install -r requirements.txt
-python run_all.py                 # full pipeline, ~1-2 min on a laptop CPU
+python run_all.py                 # full pipeline (20 graphs), ~6-8 min on a laptop CPU
 ```
 
 Run steps individually with `python 01_generate_dataset.py`, `python 02_train.py`, `python 03_evaluate.py`,
 or `python run_all.py --skip-data` to retrain on the existing dataset. All settings are in **`config.py`**.
+Every option is a switch there; the defaults are the best combination found in the experiments.
 
-## Method in brief
+## Method in brief (current best pipeline)
 
-- **Data:** 10 Barabási–Albert graphs (n = 200, m = 3). For every one of the 19,309 missing edges per graph, the exact reduction in average betweenness is computed.
-- **Fast exact ground truth:** on connected unweighted graphs, total betweenness equals the sum over node pairs of (distance − 1), so each candidate only needs a distance-matrix update (~4 s per graph instead of ~30 min with repeated Brandes runs). Verified against brute force on every run.
-- **Model:** a 3-layer GraphSAGE (mean aggregator) produces node embeddings; each candidate edge is embedded symmetrically as `[h_u + h_v, |h_u − h_v|]`; a **classifier** predicts whether the edge is in the top 10% and a **scorer** ranks edges.
-- **Training:** 7 training / 1 validation / 2 test graphs; 5,000 edges sampled per graph per epoch, biased towards the best edges; cross-entropy + triplet margin ranking loss; early stopping on validation mAP@10.
-- **Evaluation:** mAP@k, Precision@k and rank correlations on unseen test graphs, compared with four heuristic baselines.
+- **Data:** 20 Barabási–Albert graphs (n = 200, m = 3), split 14 train / 2 validation / 4 test.
+  - For every one of the 19,309 missing edges per graph, the exact reduction in average betweenness is computed.
+  - Other graph types are available via `graph_type`: `er`, `random_tree`, `ktree`, `path`.
+- **Fast exact ground truth:**
+  - On connected unweighted graphs, total betweenness = sum over node pairs of (distance − 1).
+  - So each candidate only needs a distance-matrix update (~5 s per graph instead of ~30 min).
+  - Verified against brute force on every run.
+- **Labels:** 3 classes (top 2% / 2–10% / rest). Ties share a rank (1, 1, 3, …).
+- **Model:**
+  - 3-layer GraphSAGE on 4 structural node features (degree, clustering, closeness, core number).
+  - Edge vector `[h_u + h_v, |h_u − h_v|]` plus 7 hand-made edge features: distance, common neighbours, Jaccard, Adamic–Adar, closeness gap, and min/max closeness and degree.
+  - A classifier head and a ranking head.
+- **Training:**
+  - Two stages: first the GNN + classifier, then the whole model is fine-tuned on the ranking loss at a lower learning rate.
+  - 5,000 edges sampled per graph per epoch, biased to the top, in mini-batches of 500.
+  - Triplet margin loss on good edges.
+  - Early stopping on the mean of validation mAP@10 and mAP@50.
+- **Shortlist + exact:** the model's top 200 edges are re-scored with the exact method. This costs almost nothing and gives near-perfect top-50 lists.
 
-## Results (test graphs, 19,309 candidates each)
+## Results (4 unseen test graphs, mean of 5 training seeds)
 
-| Method | mAP@1 | mAP@10 | mAP@100 | P@10 |
-|---|---|---|---|---|
-| **GNN (ours)** | **0.50** | **0.65** | **0.58** | **0.70** |
-| closeness gap × distance | 0.50 | 0.49 | 0.43 | 0.50 |
-| degree product | 0.00 | 0.01 | 0.02 | 0.05 |
-| distance | 0.00 | 0.00 | 0.00 | 0.00 |
-| random | 0.00 | 0.00 | 0.00 | 0.00 |
+| Method | mAP@10 | mAP@50 | top-50 overlap |
+|---|---|---|---|
+| **GNN + exact re-scoring of its top 200** | **0.975** | **0.970** | **0.970** |
+| **GNN (current pipeline)** | **0.538** | **0.662** | **0.719** |
+| GNN (original pipeline) | 0.449 | 0.553 | 0.636 |
+| closeness gap × distance (best heuristic) | 0.271 | 0.385 | 0.450 |
+| degree product | 0.013 | 0.023 | 0.086 |
+| distance / random | 0.000 | 0.000 | 0.000 |
 
-Results vary by about ±0.02 between runs (CPU non-determinism). Known limitation: the ranking head's loss stays near its margin, so most of the performance currently comes from the classifier.
+- **Bigger graphs:** the model trained on 200-node graphs still works on 500-node graphs (mAP@10 0.546). With exact re-scoring of its top 500 it reaches 0.975, in ~1 s instead of minutes.
+- **Full log:** every experiment (38 configurations, one change at a time) is in [`experiments/RESULTS.md`](experiments/RESULTS.md).
 
 ## Repository structure
 
@@ -58,9 +74,9 @@ config.py                 all settings
 03_evaluate.py            step 4
 run_all.py                runs all steps
 src/
-  graph_generation.py     Barabási–Albert graphs
-  ground_truth.py         exact reductions, brute-force check, labels
-  features.py             node features
+  graph_generation.py     BA, ER, random tree, k-tree, path graphs
+  ground_truth.py         exact reductions, brute-force check, labels, exact re-scoring
+  features.py             node and edge features
   data_io.py              save / load dataset
   model.py                GraphSAGE + edge embedding + MLP heads
   sampling.py             edge and triplet sampling
@@ -71,6 +87,7 @@ src/
   plots.py                figures
 data/                     generated dataset (reproducible from seeds)
 outputs/                  trained model, metrics, plots
+experiments/              experiment harness, all run results, RESULTS.md
 ```
 
 ## Report

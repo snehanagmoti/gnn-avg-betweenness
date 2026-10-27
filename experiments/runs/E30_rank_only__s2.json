@@ -1,0 +1,108 @@
+{
+ "name": "E30_rank_only",
+ "step": "7_recheck_tuning",
+ "seed": 2,
+ "overrides": {
+  "select_metric": "map10+map50",
+  "label_bands": [
+   0.1,
+   0.02
+  ],
+  "train_mode": "rank_only",
+  "stage2_freeze": "none",
+  "stage2_lr_factor": 0.3,
+  "edge_feature_set": [
+   "dist",
+   "common_neighbors",
+   "jaccard",
+   "adamic_adar",
+   "closeness_gap",
+   "closeness_minmax",
+   "degree_minmax"
+  ],
+  "rank_on": "all"
+ },
+ "test": {
+  "map1": 0.5,
+  "map10": 0.5551785714285714,
+  "map50": 0.6506829306512745,
+  "map100": 0.7016862980916261,
+  "p10": 0.625,
+  "top50_overlap": 0.71,
+  "opt_ratio": 0.9725954049844237,
+  "best10_ratio": 1.0,
+  "top1_in_top50": 1.0,
+  "within_2.5pct": 0.025,
+  "within_10pct": 0.060000000000000005,
+  "in_top2.5pct": 1.0,
+  "spearman50": 0.5234656611586549
+ },
+ "test_per_graph": [
+  {
+   "map1": 0.0,
+   "map10": 0.4375,
+   "map50": 0.5662618066976302,
+   "map100": 0.6630493698296661,
+   "p10": 0.6,
+   "top50_overlap": 0.64,
+   "opt_ratio": 0.9791666666666667,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.04,
+   "within_10pct": 0.12,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.4410636288905031
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.7763888888888889,
+   "map50": 0.7461342285087611,
+   "map100": 0.7067422237046067,
+   "p10": 0.8,
+   "top50_overlap": 0.78,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.6374514280908413
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.38,
+   "map50": 0.4933946332509491,
+   "map100": 0.6464156201498227,
+   "p10": 0.4,
+   "top50_overlap": 0.6,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.40827925244904356
+  },
+  {
+   "map1": 0.0,
+   "map10": 0.6268253968253968,
+   "map50": 0.7969410541477575,
+   "map100": 0.7905379786824092,
+   "p10": 0.7,
+   "top50_overlap": 0.82,
+   "opt_ratio": 0.9112149532710279,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.6070683352042318
+  }
+ ],
+ "classifier": {},
+ "best_epoch": 211,
+ "best_val_map10": 0.6280538444295188,
+ "stage1_epoch": null,
+ "train_seconds": 178.90992140769958,
+ "epochs_run": 225
+}

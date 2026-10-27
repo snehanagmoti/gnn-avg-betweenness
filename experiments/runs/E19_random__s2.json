@@ -1,0 +1,105 @@
+{
+ "name": "E19_random",
+ "step": "4_node_features",
+ "seed": 2,
+ "overrides": {
+  "select_metric": "map10+map50",
+  "label_bands": [
+   0.1,
+   0.02
+  ],
+  "train_mode": "two_stage",
+  "stage2_freeze": "none",
+  "stage2_lr_factor": 0.3,
+  "node_feature_set": [
+   "random"
+  ]
+ },
+ "test": {
+  "map1": 0.25,
+  "map10": 0.05,
+  "map50": 0.0341510366744687,
+  "map100": 0.04638137535706524,
+  "p10": 0.05,
+  "top50_overlap": 0.12000000000000001,
+  "opt_ratio": 0.4519617492968477,
+  "best10_ratio": 0.7281851560502408,
+  "top1_in_top50": 0.25,
+  "within_2.5pct": 0.01,
+  "within_10pct": 0.02,
+  "in_top2.5pct": 0.43,
+  "spearman50": 0.18311041319152271
+ },
+ "test_per_graph": [
+  {
+   "map1": 0.0,
+   "map10": 0.0,
+   "map50": 0.014335803440662775,
+   "map100": 0.015449568381793446,
+   "p10": 0.0,
+   "top50_overlap": 0.1,
+   "opt_ratio": 0.26388888888888895,
+   "best10_ratio": 0.7638888888888891,
+   "top1_in_top50": 0.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 0.26,
+   "spearman50": 0.15403302070232683
+  },
+  {
+   "map1": 0.0,
+   "map10": 0.0,
+   "map50": 0.03133985931011103,
+   "map100": 0.028808948698329496,
+   "p10": 0.0,
+   "top50_overlap": 0.12,
+   "opt_ratio": 0.42713567839195976,
+   "best10_ratio": 0.7236180904522612,
+   "top1_in_top50": 0.0,
+   "within_2.5pct": 0.0,
+   "within_10pct": 0.0,
+   "in_top2.5pct": 0.48,
+   "spearman50": 0.24153141904252753
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.2,
+   "map50": 0.0863517643703814,
+   "map100": 0.12323930307325595,
+   "p10": 0.2,
+   "top50_overlap": 0.2,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 0.68,
+   "spearman50": 0.272382020415397
+  },
+  {
+   "map1": 0.0,
+   "map10": 0.0,
+   "map50": 0.0045767195767195765,
+   "map100": 0.01802768127488208,
+   "p10": 0.0,
+   "top50_overlap": 0.06,
+   "opt_ratio": 0.11682242990654204,
+   "best10_ratio": 0.425233644859813,
+   "top1_in_top50": 0.0,
+   "within_2.5pct": 0.0,
+   "within_10pct": 0.0,
+   "in_top2.5pct": 0.3,
+   "spearman50": 0.06449519260583947
+  }
+ ],
+ "classifier": {
+  "cls_acc": 0.8958516753845357,
+  "cls_bal_acc": 0.34486822637103354,
+  "cls_f1_good": 0.1247347151891013
+ },
+ "best_epoch": 122,
+ "best_val_map10": 0.0411547619047619,
+ "stage1_epoch": 55,
+ "train_seconds": 219.84143710136414,
+ "epochs_run": 277
+}

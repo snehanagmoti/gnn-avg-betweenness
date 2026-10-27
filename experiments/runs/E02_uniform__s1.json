@@ -1,0 +1,95 @@
+{
+ "name": "E02_uniform",
+ "step": "1_sampling",
+ "seed": 1,
+ "overrides": {
+  "sampling": "uniform"
+ },
+ "test": {
+  "map1": 0.75,
+  "map10": 0.42920634920634915,
+  "map50": 0.5063999361372711,
+  "map100": 0.5396029482928489,
+  "p10": 0.47500000000000003,
+  "top50_overlap": 0.585,
+  "opt_ratio": 0.9947916666666667,
+  "best10_ratio": 1.0,
+  "top1_in_top50": 1.0,
+  "within_2.5pct": 0.025,
+  "within_10pct": 0.05500000000000001,
+  "in_top2.5pct": 0.995,
+  "spearman50": 0.43604578467793487
+ },
+ "test_per_graph": [
+  {
+   "map1": 0.0,
+   "map10": 0.36666666666666664,
+   "map50": 0.38573276500284537,
+   "map100": 0.5021184242185871,
+   "p10": 0.4,
+   "top50_overlap": 0.5,
+   "opt_ratio": 0.9791666666666667,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.04,
+   "within_10pct": 0.1,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.3662150108869594
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.6268253968253968,
+   "map50": 0.6608974915200085,
+   "map100": 0.594826711880229,
+   "p10": 0.7,
+   "top50_overlap": 0.72,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.5815523593834564
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.26,
+   "map50": 0.37699334362767833,
+   "map100": 0.4448257440109958,
+   "p10": 0.3,
+   "top50_overlap": 0.48,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 0.98,
+   "spearman50": 0.42887851215058675
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.46333333333333326,
+   "map50": 0.601976144398552,
+   "map100": 0.616640913061584,
+   "p10": 0.5,
+   "top50_overlap": 0.64,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.36753725629073675
+  }
+ ],
+ "classifier": {
+  "cls_acc": 0.9384613392718422,
+  "cls_bal_acc": 0.7932875377449742,
+  "cls_f1_good": 0.6729917462382573
+ },
+ "best_epoch": 10,
+ "best_val_map10": 0.56,
+ "stage1_epoch": null,
+ "train_seconds": 43.694902658462524,
+ "epochs_run": 60
+}

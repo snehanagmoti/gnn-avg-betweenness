@@ -11,3 +11,8 @@ env/
 .idea/
 .DS_Store
 Thumbs.db
+
+# experiment scratch
+data/ba20/
+data/ba500_test/
+experiments/log_*.txt

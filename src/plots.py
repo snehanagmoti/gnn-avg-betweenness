@@ -27,7 +27,7 @@ def plot_reduction_curves(data_dir, output_dir):
     plt.plot([], [], color="tab:blue", alpha=0.5, label="individual graphs")
     plt.xlabel("Missing edges (sorted by reduction)")
     plt.ylabel("Reduction in avg betweenness")
-    plt.title("Contribution of each missing edge (BA graphs)")
+    plt.title("Contribution of each missing edge")
     plt.legend()
     plt.tight_layout()
     path = os.path.join(output_dir, "reduction_curves.png")
@@ -37,16 +37,21 @@ def plot_reduction_curves(data_dir, output_dir):
 
 
 def plot_training_history(history, output_dir):
+    """history: {"stage1": {...}, "stage2": {...}} (stage2 only for two-stage training)."""
     os.makedirs(output_dir, exist_ok=True)
-    epochs = range(1, len(history["train_loss"]) + 1)
     fig, ax = plt.subplots(1, 2, figsize=(11, 4))
-    ax[0].plot(epochs, history["train_loss"], label="train total loss")
-    ax[0].plot(epochs, history["train_cls_loss"], label="classification loss", alpha=0.7)
-    ax[0].plot(epochs, history["train_rank_loss"], label="ranking loss", alpha=0.7)
+    offset = 0
+    for stage, h in history.items():
+        ep = np.arange(1, len(h["val_map10"]) + 1) + offset
+        if any(h["cls_loss"]):
+            ax[0].plot(ep, h["cls_loss"], label=f"classification loss ({stage})")
+        if any(h["rank_loss"]):
+            ax[0].plot(ep, h["rank_loss"], label=f"ranking loss ({stage})")
+        ax[1].plot(ep, h["val_map10"], label=f"validation score ({stage})")
+        offset = ep[-1]
     ax[0].set_xlabel("epoch"); ax[0].set_ylabel("loss"); ax[0].legend(); ax[0].set_title("Training loss")
-    ax[1].plot(epochs, history["val_map10"], label="val mAP@10", color="tab:green")
-    ax[1].set_xlabel("epoch"); ax[1].set_ylabel("mAP@10"); ax[1].set_ylim(0, 1)
-    ax[1].legend(); ax[1].set_title("Validation mAP@10")
+    ax[1].set_xlabel("epoch"); ax[1].set_ylabel("val mAP"); ax[1].set_ylim(0, 1)
+    ax[1].legend(); ax[1].set_title("Validation score (early stopping)")
     plt.tight_layout()
     path = os.path.join(output_dir, "training_history.png")
     plt.savefig(path, dpi=150)

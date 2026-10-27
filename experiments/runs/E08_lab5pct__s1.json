@@ -1,0 +1,98 @@
+{
+ "name": "E08_lab5pct",
+ "step": "1_labels_sampling",
+ "seed": 1,
+ "overrides": {
+  "select_metric": "map10+map50",
+  "label_bands": [
+   0.05
+  ]
+ },
+ "test": {
+  "map1": 0.5,
+  "map10": 0.4433333333333333,
+  "map50": 0.5781398930347367,
+  "map100": 0.6319532571252047,
+  "p10": 0.525,
+  "top50_overlap": 0.6399999999999999,
+  "opt_ratio": 0.9771286231884058,
+  "best10_ratio": 1.0,
+  "top1_in_top50": 1.0,
+  "within_2.5pct": 0.025,
+  "within_10pct": 0.060000000000000005,
+  "in_top2.5pct": 1.0,
+  "spearman50": 0.4658845809384756
+ },
+ "test_per_graph": [
+  {
+   "map1": 0.0,
+   "map10": 0.4291666666666666,
+   "map50": 0.5059955144727236,
+   "map100": 0.6322116763426134,
+   "p10": 0.5,
+   "top50_overlap": 0.58,
+   "opt_ratio": 0.9791666666666667,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.04,
+   "within_10pct": 0.12,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.41361432838952467
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.5091666666666667,
+   "map50": 0.6656132746194694,
+   "map100": 0.612898318622888,
+   "p10": 0.6,
+   "top50_overlap": 0.72,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.5459058792524993
+  },
+  {
+   "map1": 0.0,
+   "map10": 0.26,
+   "map50": 0.4437759086067097,
+   "map100": 0.5641417913628912,
+   "p10": 0.3,
+   "top50_overlap": 0.52,
+   "opt_ratio": 0.9293478260869564,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.4102525460185839
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.575,
+   "map50": 0.697174874440044,
+   "map100": 0.7185612421724263,
+   "p10": 0.7,
+   "top50_overlap": 0.74,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.4937655700932947
+  }
+ ],
+ "classifier": {
+  "cls_acc": 0.9747138640012429,
+  "cls_bal_acc": 0.8314739639383677,
+  "cls_f1_good": 0.7318571010039332
+ },
+ "best_epoch": 133,
+ "best_val_map10": 0.588382564526403,
+ "stage1_epoch": null,
+ "train_seconds": 137.0709626674652,
+ "epochs_run": 183
+}

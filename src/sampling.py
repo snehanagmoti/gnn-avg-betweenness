@@ -1,24 +1,36 @@
 """
-Step 3b: which edges and triplets the model trains on (paper Section 4.2).
+Step 3b: which edges the model trains on each epoch, and which triplets / pairs the ranking loss uses.
 
-The paper samples edges with a y = x^4 shape so both extremes (big decrease / big increase of
-MAX betweenness) are picked often and the flat middle rarely. For AVERAGE betweenness there is
-no "increase" side, so we put the x^4 weight on the top of the ranking only:
-    weight(rank) = (1 - r)^power,  r = rank / num_edges in [0, 1), r = 0 is the best edge
-With power 4 and the top 10% labelled positive, ~40% of sampled edges are positives.
+  top_biased : the paper's x^4 idea applied to the top of the ranking only (original pipeline)
+               weight(rank) = (1 - r)^power,  r = rank / num_edges,  r = 0 is the best edge
+  stratified : TA (23 Oct) - a fixed mix of good, near-good, middle and bad edges.
+               Bands are top fractions, e.g. [0.02, 0.10, 0.50] -> top 2% | 2-10% | 10-50% | bottom 50%,
+               and `ratios` says which share of the sample comes from each band.
+  uniform    : every edge equally likely
 """
 import numpy as np
 
 
-def sample_edges(reductions, sample_size, power, rng):
-    """Return indices of `sample_size` edges, biased towards the best ones."""
+def sample_edges(reductions, sample_size, rng, method="top_biased", power=4.0,
+                 bands=(0.02, 0.10, 0.50), ratios=(0.3, 0.3, 0.2, 0.2)):
     E = len(reductions)
+    size = min(sample_size, E)
     order = np.argsort(-reductions, kind="stable")      # best first
-    r = np.arange(E) / E
-    w = (1.0 - r) ** power
-    w /= w.sum()
-    picked = rng.choice(E, size=min(sample_size, E), replace=False, p=w)
-    return order[picked]
+    if method == "top_biased":
+        r = np.arange(E) / E
+        w = (1.0 - r) ** power
+        w /= w.sum()
+        return order[rng.choice(E, size=size, replace=False, p=w)]
+    if method == "uniform":
+        return rng.choice(E, size=size, replace=False)
+    if method == "stratified":
+        cuts = [0] + [int(round(b * E)) for b in bands] + [E]
+        picked = []
+        for (lo, hi), share in zip(zip(cuts[:-1], cuts[1:]), ratios):
+            k = min(int(round(share * size)), hi - lo)
+            picked.append(order[lo + rng.choice(hi - lo, size=k, replace=False)])
+        return np.concatenate(picked)
+    raise ValueError(f"Unknown sampling method: {method}")
 
 
 def sample_triplets(candidate_positions, num_triplets, rng):

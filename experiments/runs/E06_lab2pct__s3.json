@@ -1,0 +1,98 @@
+{
+ "name": "E06_lab2pct",
+ "step": "1_labels_sampling",
+ "seed": 3,
+ "overrides": {
+  "select_metric": "map10+map50",
+  "label_bands": [
+   0.02
+  ]
+ },
+ "test": {
+  "map1": 0.75,
+  "map10": 0.49833333333333335,
+  "map50": 0.597038613074967,
+  "map100": 0.6301106682997049,
+  "p10": 0.5750000000000001,
+  "top50_overlap": 0.6599999999999999,
+  "opt_ratio": 0.9947916666666667,
+  "best10_ratio": 1.0,
+  "top1_in_top50": 1.0,
+  "within_2.5pct": 0.025,
+  "within_10pct": 0.060000000000000005,
+  "in_top2.5pct": 1.0,
+  "spearman50": 0.5236480386658364
+ },
+ "test_per_graph": [
+  {
+   "map1": 0.0,
+   "map10": 0.4105555555555555,
+   "map50": 0.5608278601448793,
+   "map100": 0.6537224595189985,
+   "p10": 0.5,
+   "top50_overlap": 0.64,
+   "opt_ratio": 0.9791666666666667,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.04,
+   "within_10pct": 0.12,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.45973776975224656
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.7327777777777778,
+   "map50": 0.6656692479465213,
+   "map100": 0.6071191557839218,
+   "p10": 0.8,
+   "top50_overlap": 0.72,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.6129080763270233
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.3,
+   "map50": 0.4382234856451137,
+   "map100": 0.5523996818461375,
+   "p10": 0.4,
+   "top50_overlap": 0.52,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.448849582766372
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.55,
+   "map50": 0.7234338585633536,
+   "map100": 0.7072013760497613,
+   "p10": 0.6,
+   "top50_overlap": 0.76,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.573096725817704
+  }
+ ],
+ "classifier": {
+  "cls_acc": 0.9894997151587342,
+  "cls_bal_acc": 0.7863140200282844,
+  "cls_f1_good": 0.6918049474539325
+ },
+ "best_epoch": 165,
+ "best_val_map10": 0.6083581046796407,
+ "stage1_epoch": null,
+ "train_seconds": 161.83229541778564,
+ "epochs_run": 215
+}

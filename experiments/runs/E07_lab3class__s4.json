@@ -1,0 +1,99 @@
+{
+ "name": "E07_lab3class",
+ "step": "1_labels_sampling",
+ "seed": 4,
+ "overrides": {
+  "select_metric": "map10+map50",
+  "label_bands": [
+   0.1,
+   0.02
+  ]
+ },
+ "test": {
+  "map1": 0.75,
+  "map10": 0.5281051587301587,
+  "map50": 0.589568564506292,
+  "map100": 0.6384878467574694,
+  "p10": 0.6000000000000001,
+  "top50_overlap": 0.6399999999999999,
+  "opt_ratio": 0.9947916666666667,
+  "best10_ratio": 1.0,
+  "top1_in_top50": 1.0,
+  "within_2.5pct": 0.025,
+  "within_10pct": 0.060000000000000005,
+  "in_top2.5pct": 1.0,
+  "spearman50": 0.5077302667536956
+ },
+ "test_per_graph": [
+  {
+   "map1": 0.0,
+   "map10": 0.3716666666666667,
+   "map50": 0.522971845492386,
+   "map100": 0.6544445738653678,
+   "p10": 0.5,
+   "top50_overlap": 0.6,
+   "opt_ratio": 0.9791666666666667,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.04,
+   "within_10pct": 0.12,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.43481422597434344
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.7675,
+   "map50": 0.6757341158794808,
+   "map100": 0.6088344356895186,
+   "p10": 0.8,
+   "top50_overlap": 0.72,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.6238374552473044
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.3571428571428571,
+   "map50": 0.44303849630693753,
+   "map100": 0.5507301871385843,
+   "p10": 0.4,
+   "top50_overlap": 0.5,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.4516917109789313
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.616111111111111,
+   "map50": 0.7165298003463638,
+   "map100": 0.7399421903364066,
+   "p10": 0.7,
+   "top50_overlap": 0.74,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.5205776748142035
+  }
+ ],
+ "classifier": {
+  "cls_acc": 0.9350044020922886,
+  "cls_bal_acc": 0.6928099450306747,
+  "cls_f1_good": 0.7067644612765167
+ },
+ "best_epoch": 99,
+ "best_val_map10": 0.6072279720954741,
+ "stage1_epoch": null,
+ "train_seconds": 113.89578175544739,
+ "epochs_run": 149
+}

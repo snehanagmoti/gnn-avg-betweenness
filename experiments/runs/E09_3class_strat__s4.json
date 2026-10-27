@@ -1,0 +1,100 @@
+{
+ "name": "E09_3class_strat",
+ "step": "2_architecture",
+ "seed": 4,
+ "overrides": {
+  "select_metric": "map10+map50",
+  "label_bands": [
+   0.1,
+   0.02
+  ],
+  "sampling": "stratified"
+ },
+ "test": {
+  "map1": 0.75,
+  "map10": 0.455297619047619,
+  "map50": 0.5064969959078817,
+  "map100": 0.5422548084705582,
+  "p10": 0.525,
+  "top50_overlap": 0.58,
+  "opt_ratio": 0.9947916666666667,
+  "best10_ratio": 1.0,
+  "top1_in_top50": 1.0,
+  "within_2.5pct": 0.025,
+  "within_10pct": 0.05500000000000001,
+  "in_top2.5pct": 0.995,
+  "spearman50": 0.42241995612516897
+ },
+ "test_per_graph": [
+  {
+   "map1": 0.0,
+   "map10": 0.3796428571428571,
+   "map50": 0.4247174396620116,
+   "map100": 0.5502049027794029,
+   "p10": 0.5,
+   "top50_overlap": 0.52,
+   "opt_ratio": 0.9791666666666667,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.04,
+   "within_10pct": 0.1,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.33232401814932405
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.656547619047619,
+   "map50": 0.6462845371013359,
+   "map100": 0.5517437262190592,
+   "p10": 0.7,
+   "top50_overlap": 0.7,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.5808788766279458
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.22666666666666666,
+   "map50": 0.35373447582689066,
+   "map100": 0.4802506506440611,
+   "p10": 0.3,
+   "top50_overlap": 0.46,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 0.98,
+   "spearman50": 0.4007711110624998
+  },
+  {
+   "map1": 1.0,
+   "map10": 0.5583333333333333,
+   "map50": 0.6012515310412886,
+   "map100": 0.5868199542397096,
+   "p10": 0.6,
+   "top50_overlap": 0.64,
+   "opt_ratio": 1.0,
+   "best10_ratio": 1.0,
+   "top1_in_top50": 1.0,
+   "within_2.5pct": 0.02,
+   "within_10pct": 0.04,
+   "in_top2.5pct": 1.0,
+   "spearman50": 0.37570581866090613
+  }
+ ],
+ "classifier": {
+  "cls_acc": 0.8826971878398674,
+  "cls_bal_acc": 0.7669694476318704,
+  "cls_f1_good": 0.6412583928749109
+ },
+ "best_epoch": 24,
+ "best_val_map10": 0.5648479194163172,
+ "stage1_epoch": null,
+ "train_seconds": 48.08583974838257,
+ "epochs_run": 74
+}
