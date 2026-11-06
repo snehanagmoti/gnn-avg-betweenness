@@ -16,3 +16,9 @@ Thumbs.db
 data/ba20/
 data/ba500_test/
 experiments/log_*.txt
+experiments/v3/cache/
+experiments/v3/log_*.txt
+experiments/v3/results/N0*__s*.pt
+experiments/v3/results/N1[0-2]*__s*.pt
+experiments/v3/results/N14*__s*.pt
+__pycache__/
