@@ -22,3 +22,6 @@ experiments/v3/results/N0*__s*.pt
 experiments/v3/results/N1[0-2]*__s*.pt
 experiments/v3/results/N14*__s*.pt
 __pycache__/
+experiments/v3/cache_diverse/
+data_real/
+experiments/v3/results/N15*__s*.pt

@@ -16,6 +16,7 @@ from src.features import distance_matrix, edge_features, node_features  # noqa: 
 from src.graph_generation import generate_graph                   # noqa: E402
 from src.metrics import average_precision_at_k, relevant_set       # noqa: E402
 
+XS_R, XS_SEED = 128, 0
 CACHE = os.path.join(ROOT, "experiments", "v3", "cache")
 NODE_FEATS = ["degree", "clustering", "closeness", "core_number"]
 EDGE_FEATS = ["dist", "common_neighbors", "jaccard", "adamic_adar", "closeness_gap",
@@ -93,6 +94,13 @@ def features(r, blocks=("xn", "xe", "xp")):
         X = np.concatenate([r[b] for b in ("xn", "xe", "xp")], 1)
         f = IsolationForest(n_estimators=100, max_samples=512, random_state=0, n_jobs=2).fit(X)
         r["xa"] = _std(-f.score_samples(X))[:, None].astype(np.float32)
+    if "xs" in blocks and "xs" not in r:            # scalable features with R sampled landmarks
+        from scale import GraphPrep
+        G = nx.Graph(); G.add_nodes_from(range(int(r["n"]))); G.add_edges_from(r["edges"].tolist())
+        P = GraphPrep(G, R=XS_R, seed=XS_SEED)
+        eu, ev = P.candidates(0, P.n)
+        assert (eu == r["E"][:, 0]).all() and (ev == r["E"][:, 1]).all()
+        r["xs"] = P.features(eu, ev)
     if "xh" in blocks and "xh" not in r:            # affected-set level histograms (levels 1..4+)
         r["xh"] = level_hist_block(r)
     return np.concatenate([r[b] for b in blocks], 1)
