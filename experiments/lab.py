@@ -106,4 +106,4 @@ if __name__ == "__main__":
         run_baselines()
     else:
         seeds = tuple(int(x) for x in sys.argv[4].split(",")) if len(sys.argv) > 4 else (0, 1, 2)
-        run(sys.argv[1], json.loads(sys.argv[2]), seeds, step=sys.argv[3] if len(sys.argv) > 3 else "")
+        run(sys.argv[1], json.loads(sys.argv[2]), seeds, data_dir=os.environ.get("DATA_DIR", "data"), step=sys.argv[3] if len(sys.argv) > 3 else "")

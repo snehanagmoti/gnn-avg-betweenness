@@ -25,3 +25,5 @@ __pycache__/
 experiments/v3/cache_diverse/
 data_real/
 experiments/v3/results/N15*__s*.pt
+data_paper/
+experiments/v3/results/P_*__s*.pt
