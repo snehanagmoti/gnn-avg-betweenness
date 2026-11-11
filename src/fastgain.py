@@ -1,5 +1,5 @@
 """
-Efficient exact gain of adding one edge, cheap upper bounds, and certified exact top-k.
+Fast exact gain of adding one edge (affected sets) and the cheap affected-set clues.
 
 Notation (unweighted, connected, undirected graph; D = all-pairs distance matrix):
     total betweenness = sum over unordered pairs {s,t} of (d(s,t) - 1)
@@ -41,14 +41,6 @@ def level_histograms(D, edges, L=None):
     return cntA, cntB
 
 
-def upper_bounds(D, edges):
-    """UB(u,v) = sum_{i,j} cntA[i] * cntB[j] * min(i, j)  (>= exact gain)."""
-    cntA, cntB = level_histograms(D, edges)
-    L = cntA.shape[1]
-    M = np.minimum.outer(np.arange(L), np.arange(L)).astype(np.float64)
-    return np.einsum("ei,ij,ej->e", cntA.astype(np.float64), M, cntB.astype(np.float64))
-
-
 def pair_features(D, edges):
     """Cheap O(n)-per-edge features from the affected sets (all symmetric in u, v)."""
     cntA, cntB = level_histograms(D, edges)
@@ -80,40 +72,6 @@ def exact_gain(D, u, v):
 
 def exact_gains(D, edges):
     return np.array([exact_gain(D, int(u), int(v)) for u, v in edges])
-
-
-def certified_topk(D, edges, k, order=None, ub=None):
-    """Exact top-k (all ties at the k-th value included) with a certificate.
-    Evaluates edges in `order` (default: by upper bound, best first) and stops when no remaining
-    edge's upper bound can reach the current k-th best exact gain.
-    Returns (idx_sorted_by_gain, gains, n_evaluated)."""
-    if ub is None:
-        ub = upper_bounds(D, edges)
-    if order is None:
-        order = np.argsort(-ub, kind="stable")
-    # for a learned order, the stopping test needs the best UB among edges not yet evaluated
-    import heapq
-    rem_max = np.maximum.accumulate(ub[order][::-1])[::-1]
-    heap = []                       # the k best exact gains so far (min-heap)
-    gains = {}
-    kth = -np.inf
-    n_eval = 0
-    for pos, i in enumerate(order):
-        if pos >= k and rem_max[pos] < kth:
-            break
-        g = exact_gain(D, int(edges[i, 0]), int(edges[i, 1]))
-        gains[i] = g
-        n_eval += 1
-        if len(heap) < k:
-            heapq.heappush(heap, g)
-        elif g > heap[0]:
-            heapq.heapreplace(heap, g)
-        if len(heap) == k:
-            kth = heap[0]
-    idx = np.array(list(gains.keys()))
-    val = np.array([gains[i] for i in idx])
-    o = np.argsort(-val, kind="stable")
-    return idx[o], val[o], n_eval
 
 
 # ---------------------------------------------------------------------------------------------
@@ -153,89 +111,9 @@ try:
             out[e] = g
         return out
 
-    @_nb.njit(parallel=True, cache=True)
-    def _ub_nb(D, eu, ev, L):
-        n = D.shape[0]
-        E = eu.shape[0]
-        out = np.zeros(E)
-        for e in _nb.prange(E):
-            u = eu[e]
-            v = ev[e]
-            ca = np.zeros(L + 1)
-            cb = np.zeros(L + 1)
-            for x in range(n):
-                a = D[x, v] - D[x, u] - 1
-                if a >= 1:
-                    ca[a] += 1
-                elif a <= -3:
-                    cb[-a - 2] += 1
-            s = 0.0
-            for i in range(1, L + 1):
-                if ca[i] == 0:
-                    continue
-                for j in range(1, L + 1):
-                    s += ca[i] * cb[j] * min(i, j)
-            out[e] = s
-        return out
-
     def exact_gains_fast(D, edges):
         D = np.ascontiguousarray(D, dtype=np.int64)
         return _gains_nb(D, edges[:, 0].astype(np.int64), edges[:, 1].astype(np.int64))
 
-    def upper_bounds_fast(D, edges):
-        D = np.ascontiguousarray(D, dtype=np.int64)
-        return _ub_nb(D, edges[:, 0].astype(np.int64), edges[:, 1].astype(np.int64), int(D.max()))
-except ImportError:            # numba not installed: fall back to numpy versions
+except ImportError:            # numba not installed: fall back to the numpy version
     exact_gains_fast = exact_gains
-    upper_bounds_fast = upper_bounds
-
-
-# ---------------------------------------------------------------------------------------------
-# Exact gains of ALL candidate edges of a (large) graph without materialising the edge list.
-# Canonical order: u ascending, then v > u ascending, skipping existing edges.
-try:
-    @_nb.njit(parallel=True, cache=True)
-    def _all_gains_nb(D, A, offset):
-        n = D.shape[0]
-        out = np.zeros(offset[n], np.float64)
-        for u in _nb.prange(n):
-            k = offset[u]
-            S = np.empty(n, np.int64)
-            T = np.empty(n, np.int64)
-            for v in range(u + 1, n):
-                if A[u, v]:
-                    continue
-                ns = 0
-                nt = 0
-                for x in range(n):
-                    a = D[x, v] - D[x, u] - 1
-                    if a >= 1:
-                        S[ns] = x
-                        ns += 1
-                    elif a <= -3:
-                        T[nt] = x
-                        nt += 1
-                g = 0.0
-                for i in range(ns):
-                    s = S[i]
-                    dsu = D[s, u] + 1
-                    for j in range(nt):
-                        t = T[j]
-                        d = D[s, t] - dsu - D[v, t]
-                        if d > 0:
-                            g += d
-                out[k] = g
-                k += 1
-        return out
-
-    def candidate_offsets(A):
-        n = A.shape[0]
-        cnt = np.array([(n - u - 1) - int(A[u, u + 1:].sum()) for u in range(n)], dtype=np.int64)
-        return np.concatenate([[0], np.cumsum(cnt)])
-
-    def all_gains(D, A):
-        """D: (n, n) small-int distance matrix (e.g. int16), A: (n, n) bool adjacency."""
-        off = candidate_offsets(A)
-        return _all_gains_nb(np.ascontiguousarray(D), np.ascontiguousarray(A), off), off
-except NameError:
-    pass

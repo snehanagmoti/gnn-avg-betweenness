@@ -2,9 +2,8 @@
 Node and edge input features.
 
 Node features (per node, standardized within each graph so they transfer to unseen graphs):
-    degree (log), clustering, closeness, core_number, pagerank, eigenvector, eccentricity,
-    betweenness, hub_dist (distance to the 5 highest-degree nodes), random (paper setting)
-Edge features (per candidate edge, standardized within each graph):
+    log-degree, clustering, closeness, core number
+The 9 "old" edge clues (per candidate edge, standardized within each graph):
     dist, common_neighbors, jaccard, adamic_adar, closeness_gap, closeness_minmax, degree_minmax
 """
 import networkx as nx
@@ -23,45 +22,16 @@ def distance_matrix(G: nx.Graph) -> np.ndarray:
     return shortest_path(A, unweighted=True, directed=False)
 
 
-def node_features(G: nx.Graph, feature_set, seed: int = 0, random_dim: int = 16, D=None) -> np.ndarray:
-    """Return an (n, d) float32 matrix of node features."""
+def node_features(G: nx.Graph, D=None) -> np.ndarray:
+    """(n, 4) float32: log-degree, clustering, closeness, core number, each standardized in the graph."""
     n = G.number_of_nodes()
     nodes = range(n)
     if D is None:
         D = distance_matrix(G)
-    cols = []
-    for name in feature_set:
-        if name == "degree":
-            cols.append(np.log1p([G.degree(v) for v in nodes]))
-        elif name == "clustering":
-            c = nx.clustering(G)
-            cols.append([c[v] for v in nodes])
-        elif name == "closeness":
-            cols.append((n - 1) / D.sum(1))
-        elif name == "core_number":
-            c = nx.core_number(G)
-            cols.append([c[v] for v in nodes])
-        elif name == "pagerank":
-            c = nx.pagerank(G)
-            cols.append([c[v] for v in nodes])
-        elif name == "eigenvector":
-            c = nx.eigenvector_centrality_numpy(G)
-            cols.append([abs(c[v]) for v in nodes])
-        elif name == "eccentricity":
-            cols.append(D.max(1))
-        elif name == "betweenness":
-            c = nx.betweenness_centrality(G)
-            cols.append([c[v] for v in nodes])
-        elif name == "hub_dist":
-            hubs = np.argsort([-G.degree(v) for v in nodes], kind="stable")[:5]
-            cols.extend(D[:, h] for h in hubs)
-        elif name == "random":
-            rng = np.random.default_rng(seed)
-            cols.extend(rng.standard_normal((random_dim, n)))
-        else:
-            raise ValueError(f"Unknown node feature: {name}")
-    X = np.stack([_standardize(c) for c in cols], axis=1)
-    return X.astype(np.float32)
+    clus, core = nx.clustering(G), nx.core_number(G)
+    cols = [np.log1p([G.degree(v) for v in nodes]), [clus[v] for v in nodes],
+            (n - 1) / D.sum(1), [core[v] for v in nodes]]
+    return np.stack([_standardize(c) for c in cols], axis=1).astype(np.float32)
 
 
 def edge_features(G: nx.Graph, missing_edges: np.ndarray, feature_set, D=None) -> np.ndarray:

@@ -1,5 +1,5 @@
 """
-Step 1a: generate synthetic connected networks.
+Synthetic connected graphs.
 
   ba          : Barabasi-Albert, each new node attaches to m nodes (hubs + periphery)
   er          : Erdos-Renyi G(n, p), regenerated with the next seed until connected
@@ -50,20 +50,3 @@ def generate_graph(graph_type, num_nodes, seed, m=3, p=0.04, k=2):
     if graph_type == "path":
         return nx.path_graph(num_nodes)
     raise ValueError(f"Unknown graph type: {graph_type}")
-
-
-def generate_graphs(num_graphs, num_nodes, m_values=(3,), base_seed=0, graph_type="ba",
-                    p_values=(0.04,), k=2):
-    """Return a list of (graph, metadata) pairs."""
-    graphs = []
-    for i in range(num_graphs):
-        seed = base_seed + i
-        m = m_values[i % len(m_values)]
-        p = p_values[i % len(p_values)]
-        n = num_nodes if graph_type != "path" else num_nodes - 10 * (num_graphs // 2) + 10 * i
-        G = nx.convert_node_labels_to_integers(generate_graph(graph_type, n, seed, m, p, k))
-        assert nx.is_connected(G)
-        meta = {"graph_id": i, "type": graph_type, "n": G.number_of_nodes(), "seed": seed}
-        meta.update({"ba": {"m": m}, "er": {"p": p}, "ktree": {"k": k}}.get(graph_type, {}))
-        graphs.append((G, meta))
-    return graphs
