@@ -5,7 +5,51 @@ Checking every candidate exactly is expensive, so this project trains a **Graph 
 
 The approach follows *Aashish et al., "Deep Learning based Link Prediction for Minimizing Maximum Betweenness"*, adapted from **maximum** to **average** betweenness.
 
-## Pipeline
+## Version 3 (latest, branch `version3`)
+
+**What changed from version 2:**
+- **Fast exact algorithm** (`src/fastgain.py`): a pair (s, t) can only get shorter via a new edge (u, v) if s is at least 2 hops closer to u and t at least 2 hops closer to v ("affected sets"). Only that small block of pairs is checked, compiled with numba.
+  - Exact gains for **all** candidates: BA-200 0.006 s (was ~3 s), BA-500 0.17 s (was ~7 min), BA-1000 ~1.5 s.
+- **New cheap edge features:** 7 affected-set features + 8 level histograms, added to the 9 version 2 edge features.
+- **One regression model instead of classifier + ranker:**
+  - GraphSAGE (3 layers, width 64) + MLP predicts the per-graph standardized log reduction of every edge.
+  - Loss: squared error, with the best edges weighted more (1 + 2 × grade).
+- **More training graphs:** labels are now almost free, so we train on hundreds of graphs.
+- **Final answer:** re-score the model's top 100 edges with the exact method (< 1 ms).
+
+**Results on 50 unseen BA-200 graphs (mAP@10 / mAP@50):**
+
+| | Model alone | + exact top 100 |
+|---|---|---|
+| Version 2 | 0.608 / 0.681 | 0.974 / 0.921 |
+| **Version 3** | **0.845 / 0.884** | **0.999 / 0.998** |
+
+**Results on the paper-style dataset** (240 graphs as in Aashish et al., Table 1; 48 test graphs; mAP@10 / mAP@100):
+
+| | BA | ER | Tree | Path | All |
+|---|---|---|---|---|---|
+| Simple rule (closeness gap × distance) | 0.27 / 0.36 | 0.31 / 0.46 | 0.00 / 0.04 | 0.00 / 0.00 | 0.24 / 0.35 |
+| Version 2 | 0.70 / 0.75 | 0.47 / 0.58 | 0.53 / 0.82 | 0.53 / 0.84 | 0.58 / 0.69 |
+| **Version 3** (+ extra trees / paths) | **0.88 / 0.91** | **0.80 / 0.84** | **1.00 / 0.93** | 0.04 / 0.30 | **0.83 / 0.86** |
+
+Paths (only 2 test graphs) remain the weak spot of version 3.
+
+**Run version 3:**
+
+```bash
+pip install -r requirements.txt
+cd experiments/v3
+python paper_data.py                                   # build the paper-style dataset (240 graphs, ~1 min)
+python gnn_paper.py P_v3 '{}'                          # train + evaluate per graph type
+python gnn_paper.py P_v3_moretreepath '{"extra":{"trees":true,"paths":true}}'
+python gnn3.py N13_final_5seeds '{"weight_top":2,"hidden":64,"n_extra":300,"graphs_per_epoch":40,"edge_blocks":["xe","xp","xh"],"seeds":[0,1,2,3,4]}'
+```
+
+**Details:**
+- `experiments/v3/RESULTS_v3.md`: full experiment log.
+- `experiments/v3/METRICS.md`: every metric explained with a worked example.
+
+## Pipeline (version 2)
 
 ```mermaid
 flowchart LR
